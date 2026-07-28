@@ -12,3 +12,9 @@ type ErrAccountDisabled struct{}
 func (e *ErrAccountDisabled) Error() string {
 	return "the account is disabled"
 }
+
+type ErrUsernameAlreadyExist struct{}
+
+func (e *ErrUsernameAlreadyExist) Error() string {
+	return "username already exist"
+}

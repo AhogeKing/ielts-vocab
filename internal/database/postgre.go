@@ -3,8 +3,6 @@ package database
 import (
 	"errors"
 	"fmt"
-	"net"
-	"net/url"
 	"os"
 	"strings"
 
@@ -72,15 +70,24 @@ func loadPostgresConfig() (postgresConfig, error) {
 }
 
 func (c postgresConfig) dsn() string {
-	query := url.Values{}
-	query.Set("sslmode", c.sslMode)
-	query.Set("TimeZone", c.timeZone)
+	return fmt.Sprintf(
+		"host=%s user=%s password=%s dbname=%s port=%s sslmode=%s TimeZone=%s",
+		quoteDSNValue(c.host),
+		quoteDSNValue(c.user),
+		quoteDSNValue(c.password),
+		quoteDSNValue(c.database),
+		quoteDSNValue(c.port),
+		quoteDSNValue(c.sslMode),
+		c.timeZone,
+	)
+}
 
-	return (&url.URL{
-		Scheme:   "postgres",
-		User:     url.UserPassword(c.user, c.password),
-		Host:     net.JoinHostPort(c.host, c.port),
-		Path:     "/" + c.database,
-		RawQuery: query.Encode(),
-	}).String()
+// quoteDSNValue escapes a value for PostgreSQL's key=value connection-string
+// format. This keeps passwords containing spaces, quotes, or backslashes valid.
+func quoteDSNValue(value string) string {
+	escaped := strings.NewReplacer(
+		"\\", "\\\\",
+		"'", "\\'",
+	).Replace(value)
+	return "'" + escaped + "'"
 }

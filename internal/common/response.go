@@ -14,8 +14,9 @@ type Response struct {
 }
 
 type ErrorInfo struct {
-	Code string `json:"code"`
-	Msg  string `json:"msg"`
+	Code   string            `json:"code"`
+	Msg    string            `json:"msg,omitempty"`
+	Fields map[string]string `json:"fields,omitempty"`
 }
 
 type Meta struct {
@@ -33,10 +34,29 @@ func OK(c *gin.Context, data interface{}) {
 	})
 }
 
+// Created sends a successful resource-creation response.
+func Created(c *gin.Context, data interface{}) {
+	c.JSON(http.StatusCreated, Response{
+		Success: true,
+		Data:    data,
+	})
+}
+
 // Fail sends an error response
 func Fail(c *gin.Context, status int, code, msg string) {
 	c.JSON(status, Response{
 		Success: false,
 		Error:   &ErrorInfo{Code: code, Msg: msg},
+	})
+}
+
+func FailWithFields(c *gin.Context, status int, code, msg string, fields map[string]string) {
+	c.JSON(status, Response{
+		Success: false,
+		Error: &ErrorInfo{
+			Code:   code,
+			Msg:    msg,
+			Fields: fields,
+		},
 	})
 }
