@@ -1,6 +1,7 @@
 package users
 
 import (
+	"Ielts-vocab/internal/auth"
 	"Ielts-vocab/internal/common"
 	"errors"
 	"net/http"
@@ -10,7 +11,8 @@ import (
 )
 
 type Handler struct {
-	s *Service
+	s      *Service
+	tokens *auth.TokenManager
 }
 
 func (h *Handler) Login(c *gin.Context) {
@@ -46,8 +48,13 @@ func (h *Handler) Login(c *gin.Context) {
 			return
 		}
 	}
-	_ = user
-	common.OK(c, "登录成功")
+	accessToken, err := h.tokens.Generate(user.ID, user.Username)
+	if err != nil {
+		common.Fail(c, http.StatusInternalServerError, "INTERNAL_ERROR", "服务器内部错误")
+		return
+	}
+
+	common.OK(c, accessToken)
 }
 
 func (h *Handler) Register(c *gin.Context) {

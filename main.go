@@ -22,7 +22,9 @@ func main() {
 	r := gin.Default()
 
 	// 注册路由
-	server.SetupRouter(r, db)
+	if err := server.SetupRouter(r, db); err != nil {
+		log.Fatal(err)
+	}
 
 	log.Fatal(r.Run(":8080"))
 }
