@@ -15,17 +15,17 @@ func (s *Service) Login(l LoginRequest) (User, error) {
 	user, err := s.repo.SelectByUsername(l.Username)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return user, &ErrInvalidCredentials{}
+			return user, ErrInvalidCredentials
 		}
 		return user, err
 	}
 
 	if err := comparePassword(user.PasswordHash, l.Password); err != nil {
-		return user, &ErrInvalidCredentials{}
+		return user, ErrInvalidCredentials
 	}
 
 	if user.IsActive == false {
-		return user, &ErrAccountDisabled{}
+		return user, ErrAccountDisabled
 	}
 
 	return user, nil
@@ -37,7 +37,7 @@ func (s *Service) Register(r RegisterRequest) error {
 	switch {
 	case err == nil:
 		// 查询成功，说明数据库已有该用户名，不能重复注册
-		return &ErrUsernameAlreadyExist{}
+		return ErrUsernameAlreadyExist
 
 	case errors.Is(err, gorm.ErrRecordNotFound):
 		passwordHash, err := hashPassword(r.Password)

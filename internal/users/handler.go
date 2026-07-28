@@ -34,14 +34,11 @@ func (h *Handler) Login(c *gin.Context) {
 
 	user, err := h.s.Login(loginJSON)
 	if err != nil {
-		var invalidCredentials *ErrInvalidCredentials
-		var accountDisabled *ErrAccountDisabled
-
 		switch {
-		case errors.As(err, &invalidCredentials):
+		case errors.Is(err, ErrInvalidCredentials):
 			common.Fail(c, http.StatusUnauthorized, "INVALID_CREDENTIALS", "用户名或密码错误")
 			return
-		case errors.As(err, &accountDisabled):
+		case errors.Is(err, ErrAccountDisabled):
 			common.Fail(c, http.StatusForbidden, "ACCOUNT_ALREADY_DISABLED", "账号已被禁用")
 			return
 		default:
@@ -73,8 +70,7 @@ func (h *Handler) Register(c *gin.Context) {
 	}
 
 	if err := h.s.Register(regJSON); err != nil {
-		var usernameAlreadyExist *ErrUsernameAlreadyExist
-		if errors.As(err, &usernameAlreadyExist) {
+		if errors.Is(err, ErrUsernameAlreadyExist) {
 			common.Fail(c, http.StatusConflict, "USERNAME_ALREADY_EXISTS", "用户名已存在")
 			return
 		}

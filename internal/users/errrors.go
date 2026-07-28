@@ -1,20 +1,9 @@
 package users
 
-type ErrInvalidCredentials struct {
-}
+import "errors"
 
-func (e *ErrInvalidCredentials) Error() string {
-	return "username or password is invalid"
-}
-
-type ErrAccountDisabled struct{}
-
-func (e *ErrAccountDisabled) Error() string {
-	return "the account is disabled"
-}
-
-type ErrUsernameAlreadyExist struct{}
-
-func (e *ErrUsernameAlreadyExist) Error() string {
-	return "username already exist"
-}
+var (
+	ErrInvalidCredentials   = errors.New("username or password is invalid")
+	ErrAccountDisabled      = errors.New("the account is disabled")
+	ErrUsernameAlreadyExist = errors.New("username already exists")
+)
