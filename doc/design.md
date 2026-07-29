@@ -399,7 +399,7 @@ updated_at
 例如 `detrimental`：
 
 ```text
-Excessive screen time can be detrimental to children's health.
+Excessive screen time can be detrimental to children'svc health.
 
 The policy may have a detrimental effect on small businesses.
 ```
@@ -644,13 +644,13 @@ ielts-vault/
 │       └── main.go
 ├── internal/
 │   ├── auth/
-│   │   ├── handler.go
-│   │   ├── service.go
+│   │   ├── h.go
+│   │   ├── svc.go
 │   │   ├── repository.go
 │   │   └── model.go
 │   ├── entry/
-│   │   ├── handler.go
-│   │   ├── service.go
+│   │   ├── h.go
+│   │   ├── svc.go
 │   │   ├── repository.go
 │   │   ├── dto.go
 │   │   └── model.go

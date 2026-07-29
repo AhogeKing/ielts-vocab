@@ -1,4 +1,4 @@
--- users 表
+-- user 表
 CREATE TABLE IF NOT EXISTS users
 (
     id            BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,

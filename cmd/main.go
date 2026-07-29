@@ -1,30 +1,30 @@
 package main
 
 import (
-	"Ielts-vocab/internal/database"
-	"Ielts-vocab/internal/server"
+	"ielts-vocab/internal/app"
+	"ielts-vocab/internal/config"
+	"ielts-vocab/internal/database"
 	"log"
-
-	"github.com/gin-gonic/gin"
 )
 
 // TIP <p>To run your code, right-click the code and select <b>Run</b>.</p> <p>Alternatively, click
 // the <icon src="AllIcons.Actions.Execute"/> icon in the gutter and select the <b>Run</b> menu item from here.</p>
 
 func main() {
-	// 初始化数据库
-	db, err := database.ConnectToPostgres()
+	appConfig, err := config.LoadConfig()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	// 创建 gin
-	r := gin.Default()
-
-	// 注册路由
-	if err := server.SetupRouter(r, db); err != nil {
+	db, err := database.ConnectToPostgres(appConfig)
+	if err != nil {
 		log.Fatal(err)
 	}
 
-	log.Fatal(r.Run(":8080"))
+	application := app.New(db, appConfig)
+
+	err = application.Router.Run(appConfig.Port)
+	if err != nil {
+		log.Fatal(err)
+	}
 }

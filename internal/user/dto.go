@@ -1,4 +1,4 @@
-package users
+package user
 
 import "github.com/go-playground/validator/v10"
 
@@ -8,7 +8,7 @@ type RegisterRequest struct {
 	Email    string `json:"email" binding:"omitempty,email,max=255"`
 }
 
-func registerJSONName(field string) string {
+func registerJSONFieldName(field string) string {
 	switch field {
 	case "Username":
 		return "username"
@@ -21,10 +21,17 @@ func registerJSONName(field string) string {
 	}
 }
 
-type LoginRequest struct {
-	Username string `json:"username" binding:"required,max=50"`
-	Password string `json:"password" binding:"required,max=72"`
-}
+type (
+	LoginRequest struct {
+		Username string `json:"username" binding:"required,max=50"`
+		Password string `json:"password" binding:"required,max=72"`
+	}
+
+	LoginResponse struct {
+		Token        string `json:"token"`
+		RefreshToken string `json:"refresh_token"`
+	}
+)
 
 func loginJSONFieldName(field string) string {
 	switch field {

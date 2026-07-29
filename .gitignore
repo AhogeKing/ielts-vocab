@@ -1,3 +1,8 @@
 .env
 
 .idea
+
+# personal document
+doc/psql-leraning.md
+doc/user-module-introduction.md
+doc/design.md
